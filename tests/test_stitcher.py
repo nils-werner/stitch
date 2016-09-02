@@ -227,16 +227,32 @@ class TestFormatters:
 
     def test_format_input(self):
         code = '2 + 2'
+        expected = '>>> 2 + 2'
+        result = R.format_input_prompt('>>> ', code, None)
+        assert result == expected
+
+    def test_format_input_multi(self):
+        code = dedent('''\
+            def f(x):
+                return x''')
+        expected = dedent('''\
+            >>> def f(x):
+            >>>     return x''')
+        result = R.format_input_prompt('>>> ', code, None)
+        assert result == expected
+
+    def test_format_ipython_input(self):
+        code = '2 + 2'
         expected = 'In [1]: 2 + 2'
-        result = R.format_input_prompt(code, 1)
+        result = R.format_ipython_prompt(code, 1)
         assert result == expected
 
     def test_format_input_none(self):
         code = 'abcde'
-        result = R.format_input_prompt(code, None)
+        result = R.format_ipython_prompt(code, None)
         assert result == code
 
-    def test_format_input_multi(self):
+    def test_format_ipython_input_multi(self):
         code = dedent('''\
         def f(x):
             return x + 2
@@ -249,12 +265,12 @@ class TestFormatters:
             ...:
             ...: f(2)
         ''').strip()
-        result = R.format_input_prompt(code, 10)
+        result = R.format_ipython_prompt(code, 10)
         assert result == expected
 
     def test_wrap_input__code(self):
         block = {'t': 'code', 'c': ['a', ['b'], 'c']}
-        result = R.wrap_input_code(block, None)
+        result = R.wrap_input_code(block, None, None)
         assert block is not result
 
     @pytest.mark.parametrize('messages,expected', [
