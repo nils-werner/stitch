@@ -4,6 +4,7 @@ from textwrap import dedent
 
 import pytest
 import pypandoc
+from traitlets import TraitError
 
 import stitch.stitch as R
 from stitch.cli import enhance_args, CSS
@@ -384,8 +385,8 @@ class TestIntegration:
         result = blocks[1]['c'][1]
         assert '\\begin{tabular}' in result
 
-    def test_on_error_raises(self):
-        s = R.Stitch('', on_error='raise')
+    def test_error_raises(self):
+        s = R.Stitch('', error='raise')
         code = dedent('''\
         ```{python}
         1 / 0
@@ -394,7 +395,7 @@ class TestIntegration:
         with pytest.raises(R.StitchError):
             s.stitch(code)
 
-        s.on_error = 'continue'
+        s.error = 'continue'
         s.stitch(code)
 
     @pytest.mark.parametrize('to', [
@@ -466,12 +467,12 @@ class TestKernel:
 
 class TestStitcher:
 
-    def test_on_error(self):
+    def test_error(self):
         s = R.Stitch('')
-        assert s.on_error == 'continue'
-        s.on_error = 'raise'
-        assert s.on_error == 'raise'
+        assert s.error == 'continue'
+        s.error = 'raise'
+        assert s.error == 'raise'
 
-        with pytest.raises(TypeError):
-            s.on_error = 'foo'
+        with pytest.raises(TraitError):
+            s.error = 'foo'
 

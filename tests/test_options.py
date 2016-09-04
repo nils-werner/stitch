@@ -27,7 +27,7 @@ class TestOptions:
     def test_defaults(self):
         s = Stitch('')
         assert s.warning
-        assert s.on_error == 'continue'
+        assert s.error == 'continue'
         assert s.to == 'html'
         assert s.standalone
 
@@ -37,7 +37,7 @@ class TestOptions:
         title: My Title
         standalone: False
         warning: False
-        on_error: raise
+        error: raise
         abstract: |
           This is the abstract.
 
@@ -51,7 +51,7 @@ class TestOptions:
 
         assert s.standalone is False
         assert s.warning is False
-        assert s.on_error == 'raise'
+        assert s.error == 'raise'
         assert getattr(s, 'abstract', None) is None
 
     @pytest.mark.parametrize('key', [

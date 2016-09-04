@@ -54,7 +54,7 @@ class Stitch(HasTraits):
 
     # Document or Cell
     warning = opt.Bool(True)
-    on_error = opt.Choice({"continue", "raise"}, default_value="continue")
+    error = opt.Choice({"continue", "raise"}, default_value="continue")
     prompt = opt.Str(None)
     echo = opt.Bool(True)
     eval = opt.Bool(True)
@@ -62,7 +62,7 @@ class Stitch(HasTraits):
     def __init__(self, name, to='html',
                  standalone=True,
                  warning=True,
-                 on_error='continue',
+                 error='continue',
                  prompt=None):
         '''
         Parameters
@@ -75,7 +75,7 @@ class Stitch(HasTraits):
             whether to make a standalone document
         warning : bool, default True
             whether to include warnings (stderr) in the ouput.
-        on_error : ``{"continue", "raise"}``
+        error : ``{"continue", "raise"}``
             how to handle errors in the code being executed.
         '''
         self._kernel_pairs = {}
@@ -86,7 +86,7 @@ class Stitch(HasTraits):
         self.standalone = standalone
         self.warning = warning
 
-        self.on_error = on_error
+        self.error = error
         self.prompt = prompt
 
     @staticmethod
@@ -236,8 +236,8 @@ class Stitch(HasTraits):
 
         for message in display_messages:
             if message['header']['msg_type'] == 'error':
-                on_error = self.get_option('on_error', attrs)
-                if on_error == 'raise':
+                error = self.get_option('error', attrs)
+                if error == 'raise':
                     exc = StitchError(message['content']['traceback'])
                     raise exc
                 block = plain_output('\n'.join(message['content']['traceback']))
