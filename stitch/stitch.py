@@ -71,6 +71,7 @@ class Stitch(HasTraits):
 
     def __init__(self, name, to='html',
                  standalone=True,
+                 self_contained=True,
                  warning=True,
                  error='continue',
                  prompt=None):
@@ -94,6 +95,7 @@ class Stitch(HasTraits):
         self.resource_dir = self.name_resource_dir(name)
 
         self.standalone = standalone
+        self.self_contained = self_contained
         self.warning = warning
 
         self.error = error
@@ -348,6 +350,7 @@ class Stitch(HasTraits):
             # we are saving to filesystem
             filepath = os.path.join(self.resource_dir,
                                     "{}.png".format(chunk_name))
+            os.makedirs(self.resource_dir, exist_ok=True)
             with open(filepath, 'wb') as f:
                 f.write(base64.decodestring(data.encode('ascii')))
             # Image :: alt text (list of inlines), target
@@ -406,7 +409,9 @@ def convert(source: str, to: str, extra_args=(),
     )
 
     standalone = '--standalone' in extra_args
-    stitcher = Stitch(name=output_name, to=to, standalone=standalone)
+    self_contained = '--self-contained' in extra_args
+    stitcher = Stitch(name=output_name, to=to, standalone=standalone,
+                      self_contained=self_contained)
     meta, blocks = stitcher.stitch(source)
     result = json.dumps([meta, blocks])
     newdoc = pypandoc.convert_text(result, to, format='json',
