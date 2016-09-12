@@ -215,7 +215,10 @@ def download_one(date):
         'Connection': 'keep-alive',
         'DNT': '1',
     }
-    os.makedirs('data/timeseries', exist_ok=True)
+    try:
+        os.makedirs('data/timeseries')
+    except os.error:
+        pass
     with open('url_7.txt') as f:
         data = f.read().strip()
 
@@ -751,4 +754,3 @@ I'd recommend reading the [notebooks](http://www.statsmodels.org/dev/examples/in
 We also didn't get to talk at all about Skipper Seabold's work on VARs, but maybe some other time.
 
 As always, [feedback is welcome](https://twitter.com/tomaugspurger).
-

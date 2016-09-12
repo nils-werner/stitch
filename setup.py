@@ -45,7 +45,7 @@ setup(
                       'nbconvert', 'pandocfilters', 'pypandoc', 'click'],
 
     extras_require={
-        'dev': ['pytest', 'pytest-cov', 'sphinx', 'pandas', 'matplotlib', 'tox'],
+        'dev': ['pytest>=3.0', 'pytest-cov', 'sphinx', 'pandas', 'matplotlib', 'tox'],
     },
     include_package_data=True,
     package_data={

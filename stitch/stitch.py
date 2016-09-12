@@ -400,7 +400,10 @@ class Stitch(HasTraits):
             ext = mimetypes.guess_extension(key)
             filepath = os.path.join(self.resource_dir,
                                     "{}{}".format(chunk_name, ext))
-            os.makedirs(self.resource_dir, exist_ok=True)
+            try:
+                os.makedirs(self.resource_dir)
+            except os.error:
+                pass
             if ext == '.svg':
                 with open(filepath, 'wt') as f:
                     f.write(data)
