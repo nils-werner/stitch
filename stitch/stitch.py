@@ -14,6 +14,7 @@ import json
 import base64
 import mimetypes
 from collections import namedtuple
+from io import open
 try:
     from queue import Empty
 except ImportError:
@@ -405,7 +406,7 @@ class Stitch(HasTraits):
             except os.error:
                 pass
             if ext == '.svg':
-                with open(filepath, 'wt') as f:
+                with open(filepath, 'wt', encoding='utf-8') as f:
                     f.write(data)
             else:
                 with open(filepath, 'wb') as f:
