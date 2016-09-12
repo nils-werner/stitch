@@ -1,4 +1,6 @@
+from __future__ import unicode_literals
 import os
+import copy
 import click
 
 from .stitch import convert
@@ -25,7 +27,7 @@ def has_booktabs(extra_args):
     ]
 
 def enhance_args(to, no_standalone, no_self_contained, extra_args):
-    extra_args = extra_args.copy()
+    extra_args = copy.copy(extra_args)
     if not no_standalone and not ('-s' in extra_args or
                                   '--standalone' in extra_args):
         extra_args.append('--standalone')

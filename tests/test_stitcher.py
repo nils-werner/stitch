@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os
 import json
 import uuid
@@ -543,4 +544,3 @@ class TestStitcher:
         assert s.has_trait('fig.width')
         assert not s.has_trait('fake.width')
         assert not s.has_trait('fig.fake')
-

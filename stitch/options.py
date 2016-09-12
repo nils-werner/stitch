@@ -1,4 +1,12 @@
-from collections.abc import Mapping
+from __future__ import unicode_literals
+try:
+    from collections.abc import Mapping
+    text_type = str
+    binary_type = bytes
+except ImportError:
+    from collections import Mapping
+    text_type = unicode
+    binary_type = str
 from traitlets import TraitType, Enum
 
 
@@ -33,11 +41,11 @@ class Choice(Enum):
 class Str(TraitType):
 
     default_value = ''
-    info_text = "Choice from a set; unwraps pandoc's JSON AST"
+    info_text = "Str; unwraps pandoc's JSON AST"
 
     def validate(self, obj, value):
         if isinstance(value, Mapping):
             value = ' '.join(x['c'] for x in value['c'] if x['c'])
-        if isinstance(value, str) or value is None:
+        if isinstance(value, text_type) or value is None:
             return value
         self.error(obj, value)

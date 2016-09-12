@@ -3,6 +3,7 @@
 build/
 dist/
 __pycache__/
+*.py[cod]
 htmlcov/
 
 .coverage
@@ -13,3 +14,6 @@ htmlcov/
 *.html
 *.pdf
 _build/
+
+.cache
+.tox

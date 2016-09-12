@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import pytest
 from textwrap import dedent
 from stitch.stitch import Stitch
@@ -78,6 +79,3 @@ class TestOptionsKernel:
         meta, blocks = s.stitch(code)
         result = blocks[-1]['c'][0]['c'][1][0]['c']
         assert result == 'This is a caption'
-
-
-

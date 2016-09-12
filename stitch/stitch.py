@@ -6,6 +6,7 @@ in the output.
 # Copyright (c) Jan Schulz <jasc@gmx.net>
 # Copyright (c) IPython Development Team.
 # Distributed under the terms of the Modified BSD License.
+from __future__ import unicode_literals
 import os
 import re
 import copy
@@ -13,7 +14,10 @@ import json
 import base64
 import mimetypes
 from collections import namedtuple
-from queue import Empty
+try:
+    from queue import Empty
+except ImportError:
+    from Queue import Empty
 
 from traitlets import HasTraits
 from jupyter_client.manager import start_new_kernel
@@ -145,7 +149,7 @@ class Stitch(HasTraits):
             thing, attr = attr.split('.', 1)
             return getattr(getattr(self, thing), attr)
         else:
-            return getattr(super(), attr)
+            return getattr(super(Stitch, self), attr)
 
     def has_trait(self, name):
         # intercepted `.`ed names for ease of use
@@ -157,7 +161,7 @@ class Stitch(HasTraits):
                 return False
             return accessor.has_trait(name)
         else:
-            return super().has_trait(name)
+            return super(Stitch, self).has_trait(name)
 
     def set_trait(self, name, value):
         # intercepted `.`ed names for ease of use
@@ -166,7 +170,7 @@ class Stitch(HasTraits):
             accessor = getattr(self, ns)
             return accessor.set_trait(name, value)
         else:
-            return super().set_trait(name, value)
+            return super(Stitch, self).set_trait(name, value)
 
     @staticmethod
     def name_resource_dir(name):
@@ -413,10 +417,10 @@ class Stitch(HasTraits):
         return block
 
 
-def convert_file(input_file: str,
-                 to: str,
+def convert_file(input_file,
+                 to,
                  extra_args=(),
-                 output_file=None) -> None:
+                 output_file=None):
     """
     Convert a markdown ``input_file`` to ``to``.
 
@@ -436,8 +440,8 @@ def convert_file(input_file: str,
     convert(source, to, extra_args=extra_args, output_file=output_file)
 
 
-def convert(source: str, to: str, extra_args=(),
-            output_file: str=None) -> None:
+def convert(source, to, extra_args=(),
+            output_file=None):
     """
     Convert a source document to an output file.
 
@@ -472,7 +476,7 @@ def convert(source: str, to: str, extra_args=(),
         print(newdoc)
 
 
-def kernel_factory(kernel_name: str) -> KernelPair:
+def kernel_factory(kernel_name):
     """
     Start a new kernel.
 
@@ -574,7 +578,7 @@ def format_output_prompt(output, number):
 # Input Processing
 # ----------------
 
-def tokenize(source: str) -> dict:
+def tokenize(source):
     """
     Convert a document to pandoc's JSON AST.
     """
@@ -590,7 +594,7 @@ def validate_options(options_line):
         raise TypeError("Invalid chunk options %s" % options_line)
 
 
-def preprocess(source: str) -> str:
+def preprocess(source):
     """
     Process a source file prior to tokenezation.
 
@@ -745,7 +749,7 @@ def execute_block(block, kp, timeout=None):
     return messages
 
 
-def run_code(code: str, kp: KernelPair, timeout=None):
+def run_code(code, kp, timeout=None):
     '''
     Execute a code chunk, capturing the output.
 
